@@ -17,12 +17,24 @@ namespace app.Controllers
 
         public async Task<IActionResult> IndexAsync()
         {
-            var httpClient = _httpClientFactory.CreateClient("WeatherServiceClient");
+            var result = string.Empty;
+            try
+            {
+                _logger.LogInformation("GetWeatherForecast APP Start");
 
-            var result = await client.GetAsync("/WeatherForecast");
-            var d = await result.Content.ReadAsStringAsync();
+                var client = _httpClientFactory.CreateClient("WeatherServiceClient");
+
+                var apiResult = await client.GetAsync("/WeatherForecast");
+                result = await apiResult.Content.ReadAsStringAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "GetWeatherForecast APP failed");
+                result = ex.Message;
+            }
+
            
-            return View("Index", d);
+            return View("Index", result);
         }
 
         public IActionResult Privacy()
