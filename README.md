@@ -98,7 +98,6 @@ az containerapp create `
   --registry-password $password `
   --query properties.configuration.ingress.fqdn
                        
-```
 $api_base_url = $(az containerapp show --name api --resource-group $RESOURCE_GROUP --query 'properties.configuration.ingress.fqdn' -o tsv)
 
 az containerapp create `
@@ -114,7 +113,7 @@ az containerapp create `
   --env-vars API_BASE_URL=$api_base_url `
   --query properties.configuration.ingress.fqdn
 
-
+```
 
 # Resources
 - [Quickstart: Deploy your first container app](https://docs.microsoft.com/en-us/azure/container-apps/get-started?tabs=bash)
