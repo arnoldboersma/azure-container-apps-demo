@@ -79,12 +79,6 @@ Create containers
 ```powershell
 az acr update --name $ACR_NAME --admin-enabled 
 $password=$(az acr credential show --name $ACR_NAME --query 'passwords[0].value' -o tsv)
-az containerapp compose create --environment $CONTAINERAPPS_ENVIRONMENT `
-                               --resource-group $RESOURCE_GROUP `
-                               --registry-server acrmycontainerapps01.azurecr.io `
-                               --registry-username $ACR_NAME `
-                               --registry-password $password
-
 
 az containerapp create `
   --name api `
