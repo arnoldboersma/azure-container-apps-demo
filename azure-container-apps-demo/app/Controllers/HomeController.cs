@@ -1,6 +1,7 @@
 ﻿using app.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Text.Json;
 
 namespace app.Controllers
 {
@@ -17,7 +18,7 @@ namespace app.Controllers
 
         public async Task<IActionResult> IndexAsync()
         {
-            var result = string.Empty;
+            string? result;
             try
             {
                 _logger.LogInformation("GetWeatherForecast APP Start");
@@ -25,15 +26,21 @@ namespace app.Controllers
                 var client = _httpClientFactory.CreateClient("WeatherServiceClient");
 
                 var apiResult = await client.GetAsync("/WeatherForecast");
-                result = await apiResult.Content.ReadAsStringAsync();
+                if (!apiResult.IsSuccessStatusCode)
+                {
+                    result = JsonSerializer.Serialize(new { apiResult.ReasonPhrase, apiResult.StatusCode });
+                }
+                else
+                {
+                    result = await apiResult.Content.ReadAsStringAsync();
+                }
+                
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "GetWeatherForecast APP failed");
-                result = ex.Message;
-            }
-
-           
+                result = JsonSerializer.Serialize(new { ex.Message, ex.StackTrace });
+            }     
             return View("Index", result);
         }
 
