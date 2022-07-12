@@ -14,8 +14,6 @@ az account set --subscription <<subscriptionid>>
 Install the Azure Container Apps extension for the CLI.
 ```Bash
 az extension add --name containerapp --upgrade
-
-az extension add --name containerapp-compose --upgrade
 ```
 
 Register the `Microsoft.App` namespace, and the `Microsoft.OperationalInsights` provider for the [Azure Monitor Log Analytics Workspace](https://docs.microsoft.com/en-us/azure/container-apps/observability?tabs=bash#azure-monitor-log-analytics) if you have not used it before.
@@ -45,21 +43,19 @@ az group create `
 Store custom containers in ACR to use with Azure Container Apps.
 
 ```powershell
-$ACR_LOGIN_SERVER=$(az acr create `
+az acr create `
   --resource-group $RESOURCE_GROUP `
   --name $ACR_NAME `
   --sku Basic `
   --query loginServer `
-  --output tsv)
+  --output tsv
 ```
 
 #### Upload images to ACR
 Build the images
 
 ```Powershell
-
 $ACR_SERVER=$(az acr show -n $ACR_NAME --query loginServer -o tsv)
-
 az acr build -r $ACR_NAME -t $ACR_SERVER/app:v1 ./azure-container-apps-demo -f ./azure-container-apps-demo/app/Dockerfile
 az acr build -r $ACR_NAME -t $ACR_SERVER/api:v1 ./azure-container-apps-demo -f ./azure-container-apps-demo/api/Dockerfile
 ```
@@ -81,13 +77,13 @@ az acr update --name $ACR_NAME --admin-enabled
 $password=$(az acr credential show --name $ACR_NAME --query 'passwords[0].value' -o tsv)
 
 az containerapp create `
-  --name api `
+  --name api1 `
   --resource-group $RESOURCE_GROUP `
   --environment $CONTAINERAPPS_ENVIRONMENT `
-  --image acrmycontainerapps01.azurecr.io/api:v1 `
+  --image $ACR_SERVER/api:v1 `
   --ingress 'internal' `
   --target-port 80 `
-  --registry-server acrmycontainerapps01.azurecr.io `
+  --registry-server $ACR_SERVER `
   --registry-username $ACR_NAME `
   --registry-password $password `
   --query properties.configuration.ingress.fqdn
@@ -95,13 +91,13 @@ az containerapp create `
 $api_base_url = $(az containerapp show --name api --resource-group $RESOURCE_GROUP --query 'properties.configuration.ingress.fqdn' -o tsv)
 
 az containerapp create `
-  --name app `
+  --name app1 `
   --resource-group $RESOURCE_GROUP `
   --environment $CONTAINERAPPS_ENVIRONMENT `
-  --image acrmycontainerapps01.azurecr.io/app:v1 `
+  --image $ACR_SERVER/app:v1 `
   --target-port 80 `
   --ingress 'external' `
-  --registry-server acrmycontainerapps01.azurecr.io `
+  --registry-server $ACR_SERVER `
   --registry-username $ACR_NAME `
   --registry-password $password `
   --env-vars API_BASE_URL=$api_base_url `
@@ -111,4 +107,3 @@ az containerapp create `
 
 # Resources
 - [Quickstart: Deploy your first container app](https://docs.microsoft.com/en-us/azure/container-apps/get-started?tabs=bash)
-- [Accelerating Azure Container Apps with the Azure CLI and Compose Files](https://techcommunity.microsoft.com/t5/apps-on-azure-blog/accelerating-azure-container-apps-with-the-azure-cli-and-compose/ba-p/3516636)

@@ -5,7 +5,11 @@
 <div class="text-center">
     <h1 class="display-4">Welcome to my Azure Container Apps v1.0</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-    <div>
-        @ViewData.Model
-    </div>
+    <pre><code id="json-container"></code></pre>
+    
+  <script>
+    var data = @Html.Raw(ViewData.Model);
+    console.log(data);
+    document.getElementById("json-container").innerHTML = JSON.stringify(data, null, 4);
+  </script>
 </div>
