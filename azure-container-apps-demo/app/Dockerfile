@@ -7,7 +7,7 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["app/app.csproj", "app/"]
+COPY ["azure-container-apps-demo/app/app.csproj", "app/"]
 RUN dotnet restore "app/app.csproj"
 COPY . .
 WORKDIR "/src/app"
