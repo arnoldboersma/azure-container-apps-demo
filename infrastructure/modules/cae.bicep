@@ -214,6 +214,10 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-06-01' = {
                 name: 'APP_PORT'
                 value: '80'
               }
+              {
+                name: 'API_BASE_URL'
+                value: api.properties.configuration.ingress.fqdn
+              }
             ]
             resources: {
               cpu: json('0.5')
