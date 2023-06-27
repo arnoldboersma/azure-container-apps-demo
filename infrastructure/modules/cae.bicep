@@ -150,7 +150,7 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-06-01' = {
       template: {
         containers: [
           {
-            image: '${azureContainerRegistryName}.azurecr.io/api:98b4da1267c491f84f7a1828349a62508c676ee8'
+            image: '${azureContainerRegistryName}.azurecr.io/api:latest'
             name: 'api'
             env: [
               {
@@ -207,7 +207,7 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-06-01' = {
       template: {
         containers: [
           {
-            image: '${azureContainerRegistryName}.azurecr.io/app:98b4da1267c491f84f7a1828349a62508c676ee8'
+            image: '${azureContainerRegistryName}.azurecr.io/app:latest'
             name: 'app'
             env: [
               {
