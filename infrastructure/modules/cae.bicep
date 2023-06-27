@@ -9,6 +9,9 @@ param location string = resourceGroup().location
 @description('Provide a logAnalytics workspace Id')
 param logAnalyticsWorkspaceId string
 
+@description('Provide a azureContainerRegistry Name')
+param azureContainerRegistryName string
+param acrPullDefinitionId string = '7f951dda-4ed3-4680-a7ca-43fe172d538d'
 param uniqueSeed string = '${subscription().subscriptionId}-${resourceGroup().name}'
 param uniqueSuffix string = uniqueString(uniqueSeed)
 param storageAccountName string = 'st${replace(uniqueSuffix, '-', '')}'
@@ -70,6 +73,17 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-06-01' = {
     }
   }
 
+  // roleDefinitionId is the ID found here for AcrPull: https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles#acrpull
+  resource roleAssignment2 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+    name: guid(resourceGroup().id, azureContainerRegistryName, 'AcrPullTestUserAssigned')
+    properties: {
+      principalId: managedIdentity.properties.principalId
+      principalType: 'ServicePrincipal'
+      // acrPullDefinitionId has a value of 7f951dda-4ed3-4680-a7ca-43fe172d538d
+      roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', acrPullDefinitionId)
+    }
+  }
+
   // Dapr state store component
   resource daprComponent 'Microsoft.App/managedEnvironments/daprComponents@2022-03-01' = {
     name: 'statestore'
@@ -94,7 +108,8 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-06-01' = {
         }
       ]
       scopes: [
-        'nodeapp'
+        'app'
+        'api'
       ]
     }
     dependsOn: [
@@ -103,56 +118,119 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-06-01' = {
   }
 
 
-//   resource nodeapp 'Microsoft.App/containerApps@2022-03-01' = {
-//     name: 'nodeapp'
-//     location: location
-//     identity: {
-//       type: 'UserAssigned'
-//       userAssignedIdentities: {
-//         '${managedIdentity.id}' : {}
-//       }
-//     }
-//     properties: {
-//       managedEnvironmentId: environment.id
-//       configuration: {
-//         ingress: {
-//           external: false
-//           targetPort: 3000
-//         }
-//         dapr: {
-//           enabled: true
-//           appId: 'nodeapp'
-//           appProtocol: 'http'
-//           appPort: 3000
-//         }
-//       }
-//       template: {
-//         containers: [
-//           {
-//             image: 'dapriosamples/hello-k8s-node:latest'
-//             name: 'hello-k8s-node'
-//             env: [
-//               {
-//                 name: 'APP_PORT'
-//                 value: '3000'
-//               }
-//             ]
-//             resources: {
-//               cpu: json('0.5')
-//               memory: '1.0Gi'
-//             }
-//           }
-//         ]
-//         scale: {
-//           minReplicas: 1
-//           maxReplicas: 1
-//         }
-//       }
-//     }
-//     dependsOn: [
-//       daprComponent
-//     ]
-//   }
+  resource api 'Microsoft.App/containerApps@2022-03-01' = {
+    name: 'api'
+    location: location
+    identity: {
+      type: 'UserAssigned'
+      userAssignedIdentities: {
+        '${managedIdentity.id}' : {}
+      }
+    }
+    properties: {
+      managedEnvironmentId: environment.id
+      configuration: {
+        ingress: {
+          external: false
+          targetPort: 80
+        }
+        dapr: {
+          enabled: true
+          appId: 'api'
+          appProtocol: 'http'
+          appPort: 80
+        }
+        registries: [
+          {
+            server: '${azureContainerRegistryName}.azurecr.io'
+            identity: managedIdentity.id
+          }
+        ]
+      }
+      template: {
+        containers: [
+          {
+            image: '${azureContainerRegistryName}.azurecr.io/api:ecf473aee20bacfabbac170e93a9050bc40ed543'
+            name: 'api'
+            env: [
+              {
+                name: 'APP_PORT'
+                value: '80'
+              }
+            ]
+            resources: {
+              cpu: json('0.5')
+              memory: '1.0Gi'
+            }
+          }
+        ]
+        scale: {
+          minReplicas: 0
+          maxReplicas: 1
+        }
+      }
+    }
+    dependsOn: [
+      daprComponent
+    ]
+  }
+
+  resource app 'Microsoft.App/containerApps@2022-03-01' = {
+    name: 'app'
+    location: location
+    identity: {
+      type: 'UserAssigned'
+      userAssignedIdentities: {
+        '${managedIdentity.id}' : {}
+      }
+    }
+    properties: {
+      managedEnvironmentId: environment.id
+      configuration: {
+        ingress: {
+          external: true
+          targetPort: 80
+        }
+        dapr: {
+          enabled: true
+          appId: 'app'
+          appProtocol: 'http'
+          appPort: 80
+        }
+        registries: [
+          {
+            server: '${azureContainerRegistryName}.azurecr.io'
+            identity: managedIdentity.id
+          }
+        ]
+      }
+      template: {
+        containers: [
+          {
+            image: '${azureContainerRegistryName}.azurecr.io/app:ecf473aee20bacfabbac170e93a9050bc40ed543'
+            name: 'app'
+            env: [
+              {
+                name: 'APP_PORT'
+                value: '80'
+              }
+            ]
+            resources: {
+              cpu: json('0.5')
+              memory: '1.0Gi'
+            }
+          }
+        ]
+        scale: {
+          minReplicas: 0
+          maxReplicas: 1
+        }
+      }
+    }
+    dependsOn: [
+      daprComponent
+    ]
+  }
 
 //   resource pythonapp 'Microsoft.App/containerApps@2022-03-01' = {
 //     name: 'pythonapp'

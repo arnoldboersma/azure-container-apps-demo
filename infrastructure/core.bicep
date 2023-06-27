@@ -20,5 +20,6 @@ module aca './modules/cae.bicep' = {
   params: {
     location: location
     logAnalyticsWorkspaceId: log.outputs.id
+    azureContainerRegistryName: acr.outputs.name
   }
 }
