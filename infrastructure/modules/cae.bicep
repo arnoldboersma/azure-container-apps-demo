@@ -161,8 +161,8 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-06-01' = {
           }
         ]
         scale: {
-          minReplicas: 0
-          maxReplicas: 1
+          minReplicas: 1
+          maxReplicas: 10
         }
       }
     }
@@ -222,8 +222,8 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-06-01' = {
           }
         ]
         scale: {
-          minReplicas: 0
-          maxReplicas: 1
+          minReplicas: 1
+          maxReplicas: 10
         }
       }
     }
