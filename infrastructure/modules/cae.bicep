@@ -134,12 +134,12 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-06-01' = {
           external: false
           targetPort: 80
         }
-        dapr: {
-          enabled: true
-          appId: 'api'
-          appProtocol: 'http'
-          appPort: 80
-        }
+        // dapr: {
+        //   enabled: true
+        //   appId: 'api'
+        //   appProtocol: 'http'
+        //   appPort: 80
+        // }
         registries: [
           {
             server: '${azureContainerRegistryName}.azurecr.io'
@@ -153,10 +153,6 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-06-01' = {
             image: '${azureContainerRegistryName}.azurecr.io/api:latest'
             name: 'api'
             env: [
-              {
-                name: 'APP_PORT'
-                value: '80'
-              }
             ]
             resources: {
               cpu: json('0.5')
@@ -189,14 +185,14 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-06-01' = {
       configuration: {
         ingress: {
           external: true
-          targetPort: 80
+          targetPort: 81
         }
-        dapr: {
-          enabled: true
-          appId: 'app'
-          appProtocol: 'http'
-          appPort: 80
-        }
+        // dapr: {
+        //   enabled: true
+        //   appId: 'app'
+        //   appProtocol: 'http'
+        //   appPort: 80
+        // }
         registries: [
           {
             server: '${azureContainerRegistryName}.azurecr.io'
@@ -211,12 +207,12 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-06-01' = {
             name: 'app'
             env: [
               {
-                name: 'APP_PORT'
-                value: '80'
-              }
-              {
                 name: 'API_BASE_URL'
                 value: api.properties.configuration.ingress.fqdn
+              }
+              {
+                name: 'ASPNETCORE_URLS'
+                value: 'http://+:80'
               }
             ]
             resources: {
