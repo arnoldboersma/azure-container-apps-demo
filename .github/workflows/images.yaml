@@ -26,22 +26,22 @@ jobs:
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
 
-    - name: Build the api image and push it to ACR
-      uses: docker/build-push-action@v2
+    - name: Build the api and push it to ACR
+      uses: docker/build-push-action@v4
       with:
         push: true
         context: ./azure-container-apps-demo
         tags: |
           ${{ secrets.REGISTRY_LOGIN_SERVER }}/api:${{ github.sha }}
           ${{ secrets.REGISTRY_LOGIN_SERVER }}/api:latest
-        file: azure-container-apps-demo/api/Dockerfile
+        file: ./azure-container-apps-demo/api/Dockerfile
 
-    - name: Build the api image and push it to ACR
-      uses: docker/build-push-action@v2
+    - name: Build the app and push it to ACR
+      uses: docker/build-push-action@v4
       with:
         push: true
         context: ./azure-container-apps-demo
         tags: |
           ${{ secrets.REGISTRY_LOGIN_SERVER }}/app:${{ github.sha }}
           ${{ secrets.REGISTRY_LOGIN_SERVER }}/app:latest
-        file: azure-container-apps-demo/app/Dockerfile
+        file: ./azure-container-apps-demo/app/Dockerfile
