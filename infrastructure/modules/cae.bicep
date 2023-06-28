@@ -131,7 +131,7 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-06-01' = {
       managedEnvironmentId: environment.id
       configuration: {
         ingress: {
-          external: false
+          external: true
           targetPort: 80
         }
         // dapr: {
@@ -155,8 +155,8 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-06-01' = {
             env: [
             ]
             resources: {
-              cpu: json('0.5')
-              memory: '1.0Gi'
+              cpu: json('1.0')
+              memory: '2.0Gi'
             }
           }
         ]
@@ -185,7 +185,7 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-06-01' = {
       configuration: {
         ingress: {
           external: true
-          targetPort: 81
+          targetPort: 80
         }
         // dapr: {
         //   enabled: true
@@ -216,8 +216,8 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-06-01' = {
               }
             ]
             resources: {
-              cpu: json('0.5')
-              memory: '1.0Gi'
+              cpu: json('1.0')
+              memory: '2.0Gi'
             }
           }
         ]
