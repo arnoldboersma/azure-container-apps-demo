@@ -17,14 +17,14 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-
+Console.WriteLine("Hello");
 
 //app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthorization();
+//app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
