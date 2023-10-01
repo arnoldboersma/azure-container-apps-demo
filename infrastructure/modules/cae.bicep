@@ -155,14 +155,14 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-06-01' = {
             env: [
             ]
             resources: {
-              cpu: json('1.0')
-              memory: '2.0Gi'
+              cpu: json('0.5')
+              memory: '1.0Gi'
             }
           }
         ]
         scale: {
-          minReplicas: 1
-          maxReplicas: 10
+          minReplicas: 0
+          maxReplicas: 1
         }
       }
     }
@@ -208,22 +208,18 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-06-01' = {
             env: [
               {
                 name: 'API_BASE_URL'
-                value: api.properties.configuration.ingress.fqdn
-              }
-              {
-                name: 'ASPNETCORE_URLS'
-                value: 'http://+:80'
+                value: 'http://${api.properties.configuration.ingress.fqdn}'
               }
             ]
             resources: {
-              cpu: json('1.0')
-              memory: '2.0Gi'
+              cpu: json('0.5')
+              memory: '1.0Gi'
             }
           }
         ]
         scale: {
-          minReplicas: 1
-          maxReplicas: 10
+          minReplicas: 0
+          maxReplicas: 1
         }
       }
     }
