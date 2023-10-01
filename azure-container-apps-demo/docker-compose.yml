@@ -6,8 +6,78 @@ services:
     build:
       context: .
       dockerfile: api/Dockerfile
+    depends_on:
+      - redis
+      - placement
+    networks:
+      - dapr
+  api-dapr:
+    image: "daprio/daprd:edge"
+    command: ["./daprd",
+     "-app-id", "api",
+     "-app-port", "80",
+     "-placement-host-address", "placement:50006",
+     "-components-path", "/components",
+     "-log-level", "debug",
+     "-config", "/configuration/config.yaml"]
+    volumes:
+        - "./components/:/components"
+        - "./config/:/configuration"
+    depends_on:
+      - api
+    network_mode: "service:api"
   app:
     image: ${DOCKER_REGISTRY-}app
     build:
       context: .
       dockerfile: app/Dockerfile
+    depends_on:
+      - redis
+      - placement
+    networks:
+      - dapr
+  app-dapr:
+    image: "daprio/daprd:edge"
+    command: ["./daprd",
+     "-app-id", "app",
+     "-app-port", "80",
+     "-placement-host-address", "placement:50006",
+     "-components-path", "/components",
+     "-log-level", "debug",
+     "-config", "/configuration/config.yaml"]
+    volumes:
+        - "./components/:/components"
+        - "./config/:/configuration"
+    depends_on:
+      - api
+    network_mode: "service:app"
+  ############################
+  # Dapr placement service
+  ############################
+  placement:
+    image: "daprio/dapr"
+    command: [
+        "./placement", 
+        "-port", "50006", 
+        "-log-level", "debug"]
+    ports:
+      - "50006:50006"
+    networks:
+      - dapr
+  ############################
+  # Redis state store
+  ############################
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6380:6379"
+    networks:
+      - dapr
+  zipkin:
+    image: openzipkin/zipkin-slim:latest
+    ports:
+      - "5411:9411"
+    networks:
+      - dapr
+networks:
+    dapr:

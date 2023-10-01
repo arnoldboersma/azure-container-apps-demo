@@ -134,12 +134,12 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-06-01' = {
           external: true
           targetPort: 80
         }
-        // dapr: {
-        //   enabled: true
-        //   appId: 'api'
-        //   appProtocol: 'http'
-        //   appPort: 80
-        // }
+        dapr: {
+          enabled: true
+          appId: 'api'
+          appProtocol: 'http'
+          appPort: 80
+        }
         registries: [
           {
             server: '${azureContainerRegistryName}.azurecr.io'
@@ -187,12 +187,12 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-06-01' = {
           external: true
           targetPort: 80
         }
-        // dapr: {
-        //   enabled: true
-        //   appId: 'app'
-        //   appProtocol: 'http'
-        //   appPort: 80
-        // }
+        dapr: {
+          enabled: true
+          appId: 'app'
+          appProtocol: 'http'
+          appPort: 80
+        }
         registries: [
           {
             server: '${azureContainerRegistryName}.azurecr.io'
