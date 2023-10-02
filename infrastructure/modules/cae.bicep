@@ -25,6 +25,7 @@ resource environment 'Microsoft.App/managedEnvironments@2022-03-01' = {
   name: name
   location: location
   properties: {
+    daprAIConnectionString: applicationInsightsConnectionString
     appLogsConfiguration: {
       destination: 'log-analytics'
       logAnalyticsConfiguration: {
