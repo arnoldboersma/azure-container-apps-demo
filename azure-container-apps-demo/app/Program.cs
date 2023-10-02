@@ -1,12 +1,21 @@
+using app;
+using Microsoft.ApplicationInsights.Extensibility;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddHttpClient("WeatherServiceClient", httpClient =>
-{
-    httpClient.BaseAddress = new Uri(builder.Configuration["API_BASE_URL"]);
-    httpClient.Timeout = new TimeSpan(0, 0, 3);
+builder.Services.AddApplicationInsightsTelemetry();
+
+builder.Services.Configure<TelemetryConfiguration>((o) => {
+    o.TelemetryInitializers.Add(new AppInsightsTelemetryInitializer());
 });
+
+
+//builder.Services.AddHttpClient("WeatherServiceClient", httpClient =>
+//{
+//    httpClient.BaseAddress = new Uri(builder.Configuration["API_BASE_URL"]);
+//    httpClient.Timeout = new TimeSpan(0, 0, 3);
+//});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

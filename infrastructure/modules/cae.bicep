@@ -9,6 +9,9 @@ param location string = resourceGroup().location
 @description('Provide a logAnalytics workspace Id')
 param logAnalyticsWorkspaceId string
 
+@description('Provide the application insights connection string')
+param applicationInsightsConnectionString string
+
 @description('Provide a azureContainerRegistry Name')
 param azureContainerRegistryName string
 param acrPullDefinitionId string = '7f951dda-4ed3-4680-a7ca-43fe172d538d'
@@ -153,6 +156,10 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-06-01' = {
             image: '${azureContainerRegistryName}.azurecr.io/api:latest'
             name: 'api'
             env: [
+              {
+                name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
+                value: applicationInsightsConnectionString
+              }
             ]
             resources: {
               cpu: json('0.5')
@@ -207,8 +214,8 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-06-01' = {
             name: 'app'
             env: [
               {
-                name: 'API_BASE_URL'
-                value: 'http://${api.properties.configuration.ingress.fqdn}'
+                name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
+                value: applicationInsightsConnectionString
               }
             ]
             resources: {
