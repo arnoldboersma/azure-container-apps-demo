@@ -22,7 +22,6 @@ public class WeatherForecastController : ControllerBase
     public IEnumerable<WeatherForecast> Get()
     {
         _logger.LogInformation("GetWeatherForecast called!!!");
-        _logger.LogWarning("GetWeatherForecast called!!!");
 
         return Enumerable.Range(1, 5).Select(index => new WeatherForecast
         {
