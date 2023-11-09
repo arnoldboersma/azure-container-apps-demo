@@ -29,7 +29,7 @@ jobs:
         password: ${{ secrets.REGISTRY_PASSWORD }}
 
     - name: Build the api and push it to ACR
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v5
       with:
         push: true
         context: ./azure-container-apps-demo
@@ -39,7 +39,7 @@ jobs:
         file: ./azure-container-apps-demo/api/Dockerfile
 
     - name: Build the app and push it to ACR
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v5
       with:
         push: true
         context: ./azure-container-apps-demo
