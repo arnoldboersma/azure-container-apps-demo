@@ -41,13 +41,13 @@ resource containerapp 'Microsoft.App/containerApps@2022-03-01' = {
     configuration: {
       ingress: {
         external: external
-        targetPort: 80
+        targetPort: 8080
       }
       dapr: {
         enabled: true
         appId: appName
         appProtocol: 'http'
-        appPort: 80
+        appPort: 8080
       }
       registries: [
         {
