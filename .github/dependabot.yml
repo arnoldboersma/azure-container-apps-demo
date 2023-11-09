@@ -6,7 +6,7 @@
 version: 2
 updates:
   - package-ecosystem: "nuget" # See documentation for possible values
-    directory: "/" # Location of package manifests
+    directory: "/azure-container-apps-demo" # Location of package manifests
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 20
@@ -15,6 +15,6 @@ updates:
         patterns:
         - 'Microsoft.*'
   - package-ecosystem: "docker" # See documentation for possible values
-    directory: "/" # Location of package manifests
+    directory: "/azure-container-apps-demo/" # Location of package manifests
     schedule:
       interval: "weekly"
