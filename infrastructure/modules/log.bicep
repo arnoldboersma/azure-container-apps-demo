@@ -1,10 +1,11 @@
 param location string
 
-@minLength(5)
-@maxLength(50)
-@description('Provide a globally unique name of your Azure Container Registry')
-param name string = 'log-${uniqueString(resourceGroup().id)}'
-param appiName string = 'appi-${uniqueString(resourceGroup().id)}'
+@minLength(13)
+@maxLength(13)
+param uniqueSuffix string
+
+var name = 'log-${uniqueSuffix}'
+var appiName = 'appi-${uniqueSuffix}'
 
 resource logAnalyticsWorkspace'Microsoft.OperationalInsights/workspaces@2020-03-01-preview' = {
   name: name
