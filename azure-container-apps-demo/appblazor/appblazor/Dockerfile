@@ -13,8 +13,8 @@ COPY "docker-compose.dcproj" "docker-compose.dcproj"
 
 COPY "app/app.csproj" "app/app.csproj"
 COPY "api/api.csproj" "api/api.csproj"
-COPY "appblazor/appblazor/Appblazor.csproj" "appblazor/appblazor/Appblazor.csproj"
-COPY "appblazor/appblazor.Client/Appblazor.Client.csproj" "appblazor/appblazor.Client/Appblazor.Client.csproj"
+COPY ["appblazor/appblazor/appblazor.csproj", "appblazor/appblazor/"]
+COPY ["appblazor/appblazor.Client/appblazor.Client.csproj", "appblazor/appblazor.Client/"]
 
 #COPY "Directory.Packages.props" "Directory.Packages.props"
 #COPY "Directory.Build.props" "Directory.Build.props"
