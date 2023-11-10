@@ -33,4 +33,4 @@ RUN dotnet publish "./Appblazor.csproj" --no-restore -c $BUILD_CONFIGURATION -o 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "appblazor.dll"]
+ENTRYPOINT ["dotnet", "Appblazor.dll"]
