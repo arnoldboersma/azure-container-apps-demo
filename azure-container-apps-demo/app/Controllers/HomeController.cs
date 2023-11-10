@@ -1,25 +1,21 @@
-﻿using app.Models;
-using Dapr.Client;
-using Microsoft.AspNetCore.DataProtection.KeyManagement;
-using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using System.Security.Cryptography.X509Certificates;
+﻿using System.Diagnostics;
 using System.Text.Json;
+using App.Models;
+using Dapr.Client;
+using Microsoft.AspNetCore.Mvc;
 
-namespace app.Controllers;
+namespace App.Controllers;
 
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
-    //private readonly IHttpClientFactory _httpClientFactory;
+    private const string StoreName = "statestore";
+    private const string Key = "GetWeatherForecastCounter";
 
-    const string storeName = "statestore";
-    const string key = "GetWeatherForecastCounter";
+    private readonly ILogger<HomeController> _logger;
 
     public HomeController(ILogger<HomeController> logger)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        //_httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
     }
 
     public async Task<IActionResult> IndexAsync()
@@ -28,21 +24,14 @@ public class HomeController : Controller
         try
         {
             _logger.LogInformation("GetWeatherForecast APP Start");
-
-            //var client = _httpClientFactory.CreateClient("WeatherServiceClient");
-
             var daprClient = new DaprClientBuilder().Build();
-            var counter = await daprClient.GetStateAsync<int>(storeName, key);
+            var counter = await daprClient.GetStateAsync<int>(StoreName, Key);
             _logger.LogInformation("GetWeatherForecast APP Current counter value: {counter}", counter);
             counter++;
 
-
-            await daprClient.SaveStateAsync(storeName, key, counter);
-            //var apiResult = await client.GetAsync("/WeatherForecast");
-
+            await daprClient.SaveStateAsync(StoreName, Key, counter);
             var request = daprClient.CreateInvokeMethodRequest(HttpMethod.Get, "api", "WeatherForecast");
             var reponse = await daprClient.InvokeMethodWithResponseAsync(request);
-
 
             if (!reponse.IsSuccessStatusCode)
             {
@@ -52,13 +41,13 @@ public class HomeController : Controller
             {
                 result = await reponse.Content.ReadAsStringAsync();
             }
-            
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "GetWeatherForecast APP failed");
             result = JsonSerializer.Serialize(new { ex.Message, ex.StackTrace });
-        }     
+        }
+
         return View("Index", result);
     }
 

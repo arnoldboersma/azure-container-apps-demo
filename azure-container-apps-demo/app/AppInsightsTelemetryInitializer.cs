@@ -1,7 +1,7 @@
 ﻿using Microsoft.ApplicationInsights.Channel;
 using Microsoft.ApplicationInsights.Extensibility;
 
-namespace app;
+namespace App;
 
 public class AppInsightsTelemetryInitializer : ITelemetryInitializer
 {
@@ -9,7 +9,7 @@ public class AppInsightsTelemetryInitializer : ITelemetryInitializer
     {
         if (string.IsNullOrEmpty(telemetry.Context.Cloud.RoleName))
         {
-            //set custom role name here
+            // set custom role name here
             telemetry.Context.Cloud.RoleName = "app";
         }
     }

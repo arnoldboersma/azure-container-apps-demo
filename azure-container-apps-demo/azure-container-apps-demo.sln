@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32319.34
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "api", "api\api.csproj", "{D88EEBA4-2A11-4819-89AD-BD2E6F77B0E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api", "api\Api.csproj", "{D88EEBA4-2A11-4819-89AD-BD2E6F77B0E8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "app", "app\app.csproj", "{0350FE90-0D32-4236-BA26-4CEF70A391B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App", "app\App.csproj", "{0350FE90-0D32-4236-BA26-4CEF70A391B5}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{CD4A821A-D50B-47AE-A8BC-E53DCAF191A7}"
 EndProject
@@ -18,6 +18,17 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{88F4AB7A-658D-445C-9449-3AD117D0448E}"
 	ProjectSection(SolutionItems) = preProject
 		config\config.yaml = config\config.yaml
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Appblazor", "appblazor\appblazor\Appblazor.csproj", "{9BEB46A6-49D1-4BD3-92F2-40340EF5F1C8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Appblazor.Client", "appblazor\appblazor.Client\Appblazor.Client.csproj", "{4C80D658-5DA5-4230-86E5-20D137D6329F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solutionitems", "solutionitems", "{57EF351A-92AE-48A2-A942-4E7DCB36BDB2}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		Directory.Build.props = Directory.Build.props
+		Directory.Packages.props = Directory.Packages.props
 	EndProjectSection
 EndProject
 Global
@@ -38,6 +49,14 @@ Global
 		{CD4A821A-D50B-47AE-A8BC-E53DCAF191A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD4A821A-D50B-47AE-A8BC-E53DCAF191A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CD4A821A-D50B-47AE-A8BC-E53DCAF191A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BEB46A6-49D1-4BD3-92F2-40340EF5F1C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BEB46A6-49D1-4BD3-92F2-40340EF5F1C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BEB46A6-49D1-4BD3-92F2-40340EF5F1C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BEB46A6-49D1-4BD3-92F2-40340EF5F1C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C80D658-5DA5-4230-86E5-20D137D6329F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C80D658-5DA5-4230-86E5-20D137D6329F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C80D658-5DA5-4230-86E5-20D137D6329F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C80D658-5DA5-4230-86E5-20D137D6329F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

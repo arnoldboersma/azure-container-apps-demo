@@ -1,0 +1,96 @@
+﻿@inject ILogger<Weather> Logger
+@page "/weather"
+@using Dapr.Client
+@using System.Text.Json
+@attribute [StreamRendering(true)]
+
+<PageTitle>Weather</PageTitle>
+
+<h1>Weather</h1>
+
+<p>This component demonstrates showing data.</p>
+@if (counter.HasValue)
+{
+    <p><em>Counter: @counter</em></p>
+}
+
+@if (!string.IsNullOrEmpty(errormessage))
+{
+    <p><em>@errormessage</em></p>
+}
+
+@if (forecasts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Temp. (C)</th>
+                <th>Temp. (F)</th>
+                <th>Summary</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var forecast in forecasts)
+            {
+                <tr>
+                    <td>@forecast.Date.ToShortDateString()</td>
+                    <td>@forecast.TemperatureC</td>
+                    <td>@forecast.TemperatureF</td>
+                    <td>@forecast.Summary</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private WeatherForecast[]? forecasts;
+    private string errormessage = default!;
+    private int? counter = default!;
+
+    private const string StoreName = "statestore";
+    private const string Key = "GetWeatherForecastCounter";
+
+    protected override async Task OnInitializedAsync()
+    {
+        Logger.LogInformation("GetWeatherForecast APP Start");
+        var daprClient = new DaprClientBuilder().Build();
+        counter = await daprClient.GetStateAsync<int>(StoreName, Key);
+        Logger.LogInformation("GetWeatherForecast APP Current counter value: {counter}", counter);
+        counter++;
+
+        await daprClient.SaveStateAsync(StoreName, Key, counter);
+        var request = daprClient.CreateInvokeMethodRequest(HttpMethod.Get, "api", "WeatherForecast");
+        var reponse = await daprClient.InvokeMethodWithResponseAsync(request);
+
+        if (!reponse.IsSuccessStatusCode)
+        {
+            errormessage = JsonSerializer.Serialize(new { reponse.ReasonPhrase, reponse.StatusCode });
+        }
+
+        if (reponse.IsSuccessStatusCode)
+        {
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+
+            var results = await reponse.Content.ReadAsStringAsync();
+
+            forecasts = await reponse.Content.ReadFromJsonAsync<WeatherForecast[]>(options);
+        }
+    }
+
+    private class WeatherForecast
+    {
+        public DateTime Date { get; set; }
+        public int TemperatureC { get; set; }
+        public string? Summary { get; set; }
+        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    }
+}
