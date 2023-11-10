@@ -8,16 +8,16 @@ EXPOSE 8080
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["appblazor/appblazor/appblazor.csproj", "appblazor/appblazor/"]
+COPY ["appblazor/appblazor/Appblazor.csproj", "appblazor/appblazor/"]
 COPY ["appblazor/appblazor.Client/appblazor.Client.csproj", "appblazor/appblazor.Client/"]
-RUN dotnet restore "./appblazor/appblazor/./appblazor.csproj"
+RUN dotnet restore "./appblazor/appblazor/./Appblazor.csproj"
 COPY . .
 WORKDIR "/src/appblazor/appblazor"
-RUN dotnet build "./appblazor.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "./Appblazor.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./appblazor.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./Appblazor.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
