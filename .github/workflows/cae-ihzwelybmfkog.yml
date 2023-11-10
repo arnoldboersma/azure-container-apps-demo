@@ -1,0 +1,47 @@
+on:
+  push:
+    branches:
+    - main
+env:
+  DOTNET_CORE_VERSION: 8.0.x
+  CONTAINER_APP_ENVIRONMENT_NAME: cae-ihzwelybmfkog
+  RESOURCE_GROUP: rg-app3
+  CONTAINER_REGISTRY_NAME: acrihzwelybmfkog
+  CONTAINER_REGISTRY_LOGIN_SERVER: acrihzwelybmfkog.azurecr.io
+jobs:
+  BuildAndDeployContainerApp:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+        - appsourcepath: api
+          containerappname: api-container-app
+        - appsourcepath: app
+          containerappname: app-container-app
+        - appsourcepath: appblazor/appblazor
+          containerappname: appblazor-container-app
+        - appsourcepath: appblazor/appblazor.Client
+          containerappname: appblazor.client-container-app
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v4
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
+    - name: Azure login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.cae_ihzwelybmfkog_SPN }}
+    - name: Container App deploy
+      uses: azure/container-apps-deploy-action@v1
+      with:
+        appSourcePath: ${{ github.workspace }}/${{ matrix.appsourcepath }}
+        acrName: ${{ env.CONTAINER_REGISTRY_NAME }}
+        acrUsername: ${{ secrets.acrihzwelybmfkog_USERNAME_48C0 }}
+        acrPassword: ${{ secrets.acrihzwelybmfkog_PASSWORD_48C0 }}
+        imageToBuild: ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ matrix.containerappname }}:${{ github.sha }}
+        containerAppName: ${{ matrix.containerappname }}
+        containerAppEnvironment: ${{ env.CONTAINER_APP_ENVIRONMENT_NAME }}
+        resourceGroup: ${{ env.RESOURCE_GROUP }}
