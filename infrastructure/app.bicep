@@ -33,6 +33,21 @@ module app './modules/container-app.bicep' = {
   }
 }
 
+module appblazor './modules/container-app.bicep' = {
+  name: '${deployment().name}-appblazor'
+  params: {
+    location: location
+    applicationInsightsConnectionString: applicationInsights.properties.ConnectionString
+    appName: 'appblazor'
+    uniqueSuffix: uniqueSuffix
+    azureContainerRegistryName: 'acr${uniqueSuffix}'
+    image: 'acr${uniqueSuffix}.azurecr.io/appblazor:latest'
+    external: true
+    managedEnvironmentId: environment.id
+    managedIdentityId: managedIdentity.id
+  }
+}
+
 module api './modules/container-app.bicep' = {
   name: '${deployment().name}-api'
   params: {

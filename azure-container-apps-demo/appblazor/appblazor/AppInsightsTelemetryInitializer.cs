@@ -1,7 +1,7 @@
 ﻿using Microsoft.ApplicationInsights.Channel;
 using Microsoft.ApplicationInsights.Extensibility;
 
-namespace Api;
+namespace Appblazor;
 
 public class AppInsightsTelemetryInitializer : ITelemetryInitializer
 {
@@ -10,7 +10,7 @@ public class AppInsightsTelemetryInitializer : ITelemetryInitializer
         if (string.IsNullOrEmpty(telemetry.Context.Cloud.RoleName))
         {
             // set custom role name here
-            telemetry.Context.Cloud.RoleName = "api";
+            telemetry.Context.Cloud.RoleName = "appblazor";
         }
     }
 }

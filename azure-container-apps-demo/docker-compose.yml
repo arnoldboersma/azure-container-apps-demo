@@ -51,6 +51,31 @@ services:
     depends_on:
       - api
     network_mode: "service:app"
+  appblazor:
+    image: ${DOCKER_REGISTRY-}appblazor
+    build:
+      context: .
+      dockerfile: appblazor/appblazor/Dockerfile
+    depends_on:
+      - redis
+      - placement
+    networks:
+      - dapr
+  appblazor-dapr:
+    image: "daprio/daprd:edge"
+    command: ["./daprd",
+     "-app-id", "appblazor",
+     "-app-port", "80",
+     "-placement-host-address", "placement:50006",
+     "-components-path", "/components",
+     "-log-level", "debug",
+     "-config", "/configuration/config.yaml"]
+    volumes:
+        - "./components/:/components"
+        - "./config/:/configuration"
+    depends_on:
+      - appblazor
+    network_mode: "service:appblazor"
   ############################
   # Dapr placement service
   ############################
@@ -79,5 +104,6 @@ services:
       - "5411:9411"
     networks:
       - dapr
+
 networks:
     dapr:
