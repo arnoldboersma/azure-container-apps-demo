@@ -14,7 +14,7 @@ resource contributorRoleDefinition 'Microsoft.Authorization/roleDefinitions@2018
 }
 
 resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
-  name: guid(resourceGroup().id, contributorRoleDefinition.id)
+  name: guid(resourceGroup().id, contributorRoleDefinition.id, uniqueSuffix)
   scope: storageAccount
   properties: {
     roleDefinitionId: contributorRoleDefinition.id
