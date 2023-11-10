@@ -11,7 +11,7 @@ WORKDIR /src
 COPY "azure-container-apps-demo.sln" "azure-container-apps-demo.sln"
 COPY "docker-compose.dcproj" "docker-compose.dcproj"
 
-COPY "app/app.csproj", "app/app.csproj"
+COPY "app/app.csproj" "app/app.csproj"
 COPY "api/api.csproj" "api/api.csproj"
 COPY "appblazor/appblazor/Appblazor.csproj" "appblazor/appblazor/Appblazor.csproj"
 COPY "appblazor/appblazor.Client/Appblazor.Client.csproj" "appblazor/appblazor.Client/Appblazor.Client.csproj"
