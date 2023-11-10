@@ -15,7 +15,7 @@ COPY "api/api.csproj" "api/api.csproj"
 COPY "appblazor/appblazor/Appblazor.csproj" "appblazor/appblazor/Appblazor.csproj"
 COPY "appblazor/appblazor.Client/Appblazor.Client.csproj" "appblazor/appblazor.Client/Appblazor.Client.csproj"
 
-COPY "Directory.Packages.props" "Directory.Packages.props"
+#COPY "Directory.Packages.props" "Directory.Packages.props"
 #COPY "Directory.Build.props" "Directory.Build.props"
 COPY "stylecop.ruleset" "stylecop.ruleset"
 COPY "NuGet.config" "NuGet.config"
