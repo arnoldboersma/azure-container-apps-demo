@@ -3,6 +3,9 @@
 		<ManagePackageVersionsCentrally>
 			true
 		</ManagePackageVersionsCentrally>
+		<CentralPackageTransitivePinningEnabled>
+			true
+		</CentralPackageTransitivePinningEnabled>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageVersion Include="Dapr.Client" Version="1.12.0" />
