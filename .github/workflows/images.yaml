@@ -54,6 +54,6 @@ jobs:
         push: true
         context: ./azure-container-apps-demo
         tags: |
-          ${{ secrets.REGISTRY_LOGIN_SERVER }}/appblazor:${{ github.sha }}
-          ${{ secrets.REGISTRY_LOGIN_SERVER }}/appblazor:latest
+          ${{ secrets.REGISTRY_LOGIN_SERVER }}/appblazor/appblazor:${{ github.sha }}
+          ${{ secrets.REGISTRY_LOGIN_SERVER }}/appblazor/appblazor:latest
         file: ./azure-container-apps-demo/appblazor/Dockerfile
