@@ -2,7 +2,7 @@ param location string = resourceGroup().location
 @minLength(13)
 @maxLength(13)
 param uniqueSuffix string
-var storageAccountName = 'st${replace(uniqueSuffix, '-', '')}'
+var storageAccountName = 'st${replace(uniqueSuffix, '-', '')}u'
 var blobContainerName = 'orders'
 var managedIdentityName = 'mi-${uniqueSuffix}'
 
